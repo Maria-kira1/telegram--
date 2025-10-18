@@ -2,24 +2,32 @@ import telebot
 from telebot import types
 import os
 
-# ====== Команда /start ======
+# ====== Приветствие ======
 @bot.message_handler(commands=['start'])
 def start(message):
-    # Приветственное сообщение
-    text = (
-        "🎉 Поздравляем! У вас есть подарок 🎁\n"
-        "➡️ Ссылка для получения подарка: https://example.com/gift\n\n"
-        "📚 Сегодня мы изучаем арабский алфавит и слова:\n"
-        "أ — Alif — Алиф\n"
-        "ب — Ba — Ба\n"
-        "ت — Ta — Та\n\n"
-        "Слова:\n"
-        "كِتَاب — Kitaab — Книга\n"
-        "مَدْرَسَة — Madrasa — Школа\n"
-        "سَلَام — Salaam — Привет"
+    markup = types.InlineKeyboardMarkup()
+    btn = types.InlineKeyboardButton("🎁 Получить подарок", callback_data="get_gift")
+    markup.add(btn)
+
+    bot.send_message(
+        message.chat.id,
+        "Привет! 👋\nНажми на кнопку ниже, чтобы получить подарок 🎁",
+        reply_markup=markup
     )
-    bot.send_message(message.chat.id, text)
+
+# ====== Обработка нажатия кнопки ======
+@bot.callback_query_handler(func=lambda call: True)
+def callback_query(call):
+    if call.data == "get_gift":
+        # Отправляем файл (может быть PDF, TXT, изображение и т.д.)
+        with open("gift.pdf", "rb") as f:
+            bot.send_document(call.message.chat.id, f)
+
+        # Можно добавить сообщение с текстом
+        bot.send_message(
+            call.message.chat.id,
+            "📚 Вот ваш подарок! Здесь также арабский алфавит и слова с транскрипцией."
+        )
 
 # ====== Запуск бота ======
-print("Бот запущен!")
 bot.infinity_polling()
