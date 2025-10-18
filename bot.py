@@ -1,6 +1,8 @@
 import telebot
 from telebot import types
-import os
+
+TOKEN = "ВАШ_ТОКЕН_ОТ_BOTFATHER"
+bot = telebot.TeleBot(TOKEN)
 
 # ====== Приветствие ======
 @bot.message_handler(commands=['start'])
@@ -20,7 +22,7 @@ def start(message):
 def callback_query(call):
     if call.data == "get_gift":
         # Отправляем файл (может быть PDF, TXT, изображение и т.д.)
-        with open("Написание арабских букв.pdf", "rb") as f:
+        with open("gift.pdf", "rb") as f:
             bot.send_document(call.message.chat.id, f)
 
         # Можно добавить сообщение с текстом
