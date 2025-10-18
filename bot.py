@@ -20,7 +20,7 @@ def start(message):
 def callback_query(call):
     if call.data == "get_gift":
         # Отправляем файл (может быть PDF, TXT, изображение и т.д.)
-        with open("gift.pdf", "rb") as f:
+        with open("Написание арабских букв.pdf", "rb") as f:
             bot.send_document(call.message.chat.id, f)
 
         # Можно добавить сообщение с текстом
