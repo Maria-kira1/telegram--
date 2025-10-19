@@ -1,35 +1,33 @@
 import telebot
 from telebot import types
 
+# === 1. Указываем токен Бота ===
 TOKEN = "ВАШ_ТОКЕН_ОТ_BOTFATHER"
+
+# === 2. Создаём объект бота ===
 bot = telebot.TeleBot(TOKEN)
 
-# ====== Приветствие ======
+# === 3. Команда /start ===
 @bot.message_handler(commands=['start'])
 def start(message):
     markup = types.InlineKeyboardMarkup()
     btn = types.InlineKeyboardButton("🎁 Получить подарок", callback_data="get_gift")
     markup.add(btn)
-
     bot.send_message(
         message.chat.id,
         "Привет! 👋\nНажми на кнопку ниже, чтобы получить подарок 🎁",
         reply_markup=markup
     )
 
-# ====== Обработка нажатия кнопки ======
+# === 4. Когда нажимают на кнопку ===
 @bot.callback_query_handler(func=lambda call: True)
 def callback_query(call):
     if call.data == "get_gift":
-        # Отправляем файл (может быть PDF, TXT, изображение и т.д.)
+        # Отправляем файл
         with open("gift.pdf", "rb") as f:
             bot.send_document(call.message.chat.id, f)
+        bot.send_message(call.message.chat.id, "📚 Вот ваш подарок! ❤️")
 
-        # Можно добавить сообщение с текстом
-        bot.send_message(
-            call.message.chat.id,
-            "📚 Вот ваш подарок! Здесь также арабский алфавит и слова с транскрипцией."
-        )
-
-# ====== Запуск бота ======
+# === 5. Запуск ===
+print("✅ Бот запущен и готов к работе!")
 bot.infinity_polling()
