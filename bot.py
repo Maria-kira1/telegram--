@@ -1,33 +1,18 @@
 import telebot
-from telebot import types
 
-# === 1. Указываем токен Бота ===
-TOKEN = "ВАШ_ТОКЕН_ОТ_BOTFATHER"
+# 🔹 Вставьте сюда ваш токен
+TOKEN = "8276344966:AAFPrnz2VMnMli4L3xm8gwC6SydeGnnH6tU"
 
-# === 2. Создаём объект бота ===
 bot = telebot.TeleBot(TOKEN)
 
-# === 3. Команда /start ===
 @bot.message_handler(commands=['start'])
-def start(message):
-    markup = types.InlineKeyboardMarkup()
-    btn = types.InlineKeyboardButton("🎁 Получить подарок", callback_data="get_gift")
-    markup.add(btn)
-    bot.send_message(
-        message.chat.id,
-        "Привет! 👋\nНажми на кнопку ниже, чтобы получить подарок 🎁",
-        reply_markup=markup
-    )
+def send_welcome(message):
+    bot.reply_to(message, "✅ Бот успешно запущен и работает!")
 
-# === 4. Когда нажимают на кнопку ===
-@bot.callback_query_handler(func=lambda call: True)
-def callback_query(call):
-    if call.data == "get_gift":
-        # Отправляем файл
-        with open("gift.pdf", "rb") as f:
-            bot.send_document(call.message.chat.id, f)
-        bot.send_message(call.message.chat.id, "📚 Вот ваш подарок! ❤️")
+@bot.message_handler(func=lambda message: True)
+def echo_all(message):
+    bot.reply_to(message, f"Вы написали: {message.text}")
 
-# === 5. Запуск ===
-print("✅ Бот запущен и готов к работе!")
-bot.infinity_polling()
+if __name__ == "__main__":
+    print("🚀 Бот запущен...")
+    bot.infinity_polling()
